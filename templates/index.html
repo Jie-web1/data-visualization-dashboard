@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>文件转换器</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <h1 class="title">文件转换器</h1>
+      <p class="subtitle">图片转 PDF · 图片格式/缩放 · 编码与换行符</p>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button type="button" class="tab active" data-tab="img2pdf" role="tab">图片 → PDF</button>
+      <button type="button" class="tab" data-tab="image" role="tab">图片转换</button>
+      <button type="button" class="tab" data-tab="encoding" role="tab">文本编码</button>
+      <button type="button" class="tab" data-tab="line-endings" role="tab">换行符</button>
+    </nav>
+
+    <main class="main">
+      <!-- 图片转 PDF -->
+      <section id="panel-img2pdf" class="panel active" role="tabpanel">
+        <form id="form-img2pdf" class="card form-card">
+          <h2 class="card-title">多张图片合并为一个 PDF</h2>
+          <p class="card-desc">支持 PNG、JPG、GIF、WebP、BMP、TIFF，按选择顺序合并。</p>
+          <div class="field">
+            <label class="label" for="img2pdf-files">选择图片（可多选）</label>
+            <input type="file" id="img2pdf-files" name="images" accept=".png,.jpg,.jpeg,.gif,.webp,.bmp,.tiff,.tif" multiple required>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">生成 PDF 并下载</button>
+          </div>
+          <p id="msg-img2pdf" class="message" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- 图片转换 -->
+      <section id="panel-image" class="panel" role="tabpanel" hidden>
+        <form id="form-image" class="card form-card">
+          <h2 class="card-title">图片格式转换与缩放</h2>
+          <p class="card-desc">转换格式或按最大尺寸/比例缩放。</p>
+          <div class="field">
+            <label class="label" for="image-file">选择图片</label>
+            <input type="file" id="image-file" name="image" accept=".png,.jpg,.jpeg,.gif,.webp,.bmp,.tiff,.tif" required>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label class="label" for="image-format">输出格式</label>
+              <select id="image-format" name="format">
+                <option value="png">PNG</option>
+                <option value="jpg">JPG</option>
+                <option value="webp">WebP</option>
+                <option value="bmp">BMP</option>
+                <option value="tiff">TIFF</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="label" for="image-max-size">最大尺寸（可选，如 800x600）</label>
+              <input type="text" id="image-max-size" name="max_size" placeholder="800x600" class="input-mono">
+            </div>
+            <div class="field">
+              <label class="label" for="image-scale">缩放比例（可选，如 0.5）</label>
+              <input type="text" id="image-scale" name="scale" placeholder="0.5" class="input-mono">
+            </div>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">转换并下载</button>
+          </div>
+          <p id="msg-image" class="message" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- 文本编码 -->
+      <section id="panel-encoding" class="panel" role="tabpanel" hidden>
+        <form id="form-encoding" class="card form-card">
+          <h2 class="card-title">文本文件编码转换</h2>
+          <p class="card-desc">在 UTF-8、GBK 等编码之间转换。</p>
+          <div class="field">
+            <label class="label" for="encoding-file">选择文件</label>
+            <input type="file" id="encoding-file" name="file" required>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label class="label" for="encoding-from">源编码</label>
+              <select id="encoding-from" name="from_encoding">
+                <option value="utf-8">UTF-8</option>
+                <option value="utf-8-sig">UTF-8 (BOM)</option>
+                <option value="gbk">GBK</option>
+                <option value="gb2312">GB2312</option>
+                <option value="latin-1">Latin-1</option>
+                <option value="cp1252">CP1252</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="label" for="encoding-to">目标编码</label>
+              <select id="encoding-to" name="to_encoding">
+                <option value="utf-8">UTF-8</option>
+                <option value="utf-8-sig">UTF-8 (BOM)</option>
+                <option value="gbk">GBK</option>
+                <option value="gb2312">GB2312</option>
+                <option value="latin-1">Latin-1</option>
+                <option value="cp1252">CP1252</option>
+              </select>
+            </div>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">转换并下载</button>
+          </div>
+          <p id="msg-encoding" class="message" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- 换行符 -->
+      <section id="panel-line-endings" class="panel" role="tabpanel" hidden>
+        <form id="form-line-endings" class="card form-card">
+          <h2 class="card-title">换行符转换</h2>
+          <p class="card-desc">LF (Unix) 与 CRLF (Windows) 互转。</p>
+          <div class="field">
+            <label class="label" for="le-file">选择文件</label>
+            <input type="file" id="le-file" name="file" required>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label class="label" for="le-encoding">文件编码</label>
+              <select id="le-encoding" name="encoding">
+                <option value="utf-8">UTF-8</option>
+                <option value="gbk">GBK</option>
+                <option value="latin-1">Latin-1</option>
+              </select>
+            </div>
+            <div class="field field-inline">
+              <label class="label">输出换行</label>
+              <label class="radio-label">
+                <input type="radio" name="to_crlf" value="0" checked> LF (Unix)
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="to_crlf" value="1"> CRLF (Windows)
+              </label>
+            </div>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">转换并下载</button>
+          </div>
+          <p id="msg-line-endings" class="message" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>本地运行 · 文件不会上传到服务器（仅临时处理）</p>
+    </footer>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
